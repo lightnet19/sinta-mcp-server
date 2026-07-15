@@ -116,5 +116,46 @@ async def sinta_detail_journal(url: str) -> str:
     except Exception as e:
         return json.dumps({"error": str(e)}, indent=2, ensure_ascii=False)
 
+@mcp.tool()
+async def sinta_search_artikel(query: str, tahun_from: int = 0, tahun_to: int = 0) -> str:
+    """Cari artikel/publikasi di SINTA berdasarkan judul atau kata kunci"""
+    try:
+        params = {"q": query, "search": "article"}
+        if tahun_from: params["year_from"] = tahun_from
+        if tahun_to: params["year_to"] = tahun_to
+        async with httpx.AsyncClient(timeout=30, follow_redirects=True) as c:
+            r = await c.get(f"{BASE}/publications", params=params)
+            soup = BeautifulSoup(r.text, "html.parser")
+            # Coba ambil artikel dari berbagai selector
+            results = []
+            for selector in [".pub-item", ".publication-item", ".article-item", "tr", ".card-item"]:
+                items = soup.select(selector)
+                if len(items) > 1:
+                    for item in items[:10]:
+                        texts = [t.strip() for t in item.stripped_strings if t.strip()]
+                        links = item.select("a[href]")
+                        data = {"konten": texts[:5]}
+                        if links:
+                            href = links[0].get("href", "")
+                            if href.startswith("/"):
+                                data["link"] = f"{BASE}{href}"
+                            elif href.startswith("http"):
+                                data["link"] = href
+                        if texts:
+                            results.append(data)
+                    if results:
+                        break
+            
+            if not results:
+                texts = [t.strip() for t in soup.text.split('\n') if t.strip() and len(t.strip()) > 40][:10]
+                hasil = [{"judul": t} for t in texts] if texts else [
+                    {"pesan": "SINTA menggunakan JavaScript. Gunakan tool Semantic Scholar, OpenAlex, atau CrossRef untuk hasil lebih akurat"}
+                ]
+                return json.dumps({"pencarian": query, "catatan": "Hasil terbatas karena SINTA render JS", "hasil": hasil}, indent=2, ensure_ascii=False)
+            
+            return json.dumps({"pencarian": query, "jumlah": len(results), "hasil": results}, indent=2, ensure_ascii=False)
+    except Exception as e:
+        return json.dumps({"error": str(e)}, indent=2, ensure_ascii=False)
+
 if __name__ == "__main__":
     mcp.run()
