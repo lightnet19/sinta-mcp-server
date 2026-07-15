@@ -76,5 +76,45 @@ async def sinta_detail_dosen(url: str) -> str:
     except Exception as e:
         return json.dumps({"error": str(e)}, indent=2, ensure_ascii=False)
 
+@mcp.tool()
+async def sinta_search_jurnal(query: str = "", akreditasi: str = "") -> str:
+    """Cari jurnal terindeks SINTA berdasarkan nama atau tingkat akreditasi (S1-S6)"""
+    try:
+        params = {}
+        if query: params["q"] = query
+        if akreditasi: params["accreditation"] = akreditasi
+        async with httpx.AsyncClient(timeout=30, follow_redirects=True) as c:
+            r = await c.get(f"{BASE}/journals", params=params)
+            soup = BeautifulSoup(r.text, "html.parser")
+            results = []
+            # Coba berbagai selector (SINTA pake JS, mungkin perlu fallback)
+            for item in soup.select(".journal-item, .card-journal, tr")[:15]:
+                texts = [t.strip() for t in item.stripped_strings if t.strip()]
+                if texts and any(len(t) > 20 for t in texts):
+                    results.append({"konten": texts[:5]})
+            if not results:
+                # Fallback: ambil teks yang mengandung kata kunci
+                texts = [t.strip() for t in soup.text.split('\n') if t.strip() and len(t.strip()) > 30][:10]
+                hasil = [{"judul": t} for t in texts] if texts else [{"pesan": "Halaman menggunakan JavaScript. Coba buka langsung: https://sinta.kemdiktisaintek.go.id/journals"}]
+                return json.dumps({"pencarian": query, "akreditasi": akreditasi, "hasil": hasil}, indent=2, ensure_ascii=False)
+            return json.dumps({"pencarian": query, "akreditasi": akreditasi, "hasil": results}, indent=2, ensure_ascii=False)
+    except Exception as e:
+        return json.dumps({"error": str(e)}, indent=2, ensure_ascii=False)
+
+@mcp.tool()
+async def sinta_detail_journal(url: str) -> str:
+    """Lihat detail jurnal SINTA dari URL (contoh: /journals/123)"""
+    try:
+        full_url = f"{BASE}{url}" if url.startswith("/") else url
+        async with httpx.AsyncClient(timeout=30, follow_redirects=True) as c:
+            r = await c.get(full_url)
+            soup = BeautifulSoup(r.text, "html.parser")
+            data = {"url": full_url}
+            texts = [t.strip() for t in soup.stripped_strings if t.strip() and len(t.strip()) > 3][:30]
+            data["konten"] = texts
+            return json.dumps(data, indent=2, ensure_ascii=False)
+    except Exception as e:
+        return json.dumps({"error": str(e)}, indent=2, ensure_ascii=False)
+
 if __name__ == "__main__":
     mcp.run()
