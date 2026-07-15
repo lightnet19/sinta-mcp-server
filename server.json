@@ -1,0 +1,19 @@
+{
+  "id": "sinta-mcp-server",
+  "name": "SINTA MCP Server",
+  "description": "MCP server untuk mengakses data SINTA (Science and Technology Index) Indonesia. Cek skor dosen dan profil peneliti.",
+  "tags": ["indonesia", "sinta", "dosen", "kemdiktisaintek", "researcher"],
+  "publisher": "fuadalfajri",
+  "homepage": "https://github.com/fuadalfajri/sinta-mcp-server",
+  "package": {
+    "type": "pypi",
+    "name": "sinta-mcp-server",
+    "version": "0.1.0",
+    "command": "python3",
+    "args": ["-m", "sinta_mcp_server"]
+  },
+  "tools": [
+    {"name": "sinta_search_dosen", "description": "Cari dosen berdasarkan nama/NIDN"},
+    {"name": "sinta_detail_dosen", "description": "Detail profil dosen dari URL SINTA"}
+  ]
+}
