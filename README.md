@@ -2,6 +2,10 @@
 
 > mcp-name: io.github.lightnet19/sinta-mcp-server
 
+[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-io.github.lightnet19%2Fsinta-mcp-server-blue)](https://registry.modelcontextprotocol.io/io.github.lightnet19/sinta-mcp-server)
+[![PyPI version](https://img.shields.io/pypi/v/sinta-mcp-server.svg)](https://pypi.org/project/sinta-mcp-server/)
+
+
 
 MCP server untuk mengakses **Science and Technology Index (SINTA)** Indonesia.
 Cek skor dosen, profil peneliti, akreditasi jurnal, dan publikasi ilmiah — langsung dari AI assistant Anda!
