@@ -2,7 +2,7 @@
 
 > mcp-name: io.github.lightnet19/sinta-mcp-server
 
-[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-io.github.lightnet19%2Fsinta-mcp-server-blue)](https://registry.modelcontextprotocol.io/v0/servers/io.github.lightnet19%2Fsinta-mcp-server/versions)
+[![MCP Registry](https://img.shields.io/static/v1?label=MCP%20Registry&message=io.github.lightnet19%2Fsinta-mcp-server&color=blue)](https://registry.modelcontextprotocol.io/v0/servers/io.github.lightnet19%2Fsinta-mcp-server/versions)
 [![PyPI version](https://img.shields.io/pypi/v/sinta-mcp-server.svg)](https://pypi.org/project/sinta-mcp-server/)
 
 
