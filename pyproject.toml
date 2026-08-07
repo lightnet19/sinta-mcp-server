@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "sinta-mcp-server"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server untuk mengakses data SINTA (Science and Technology Index) Indonesia"
 readme = "README.md"
 license = {text = "MIT"}

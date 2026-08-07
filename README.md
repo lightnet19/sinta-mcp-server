@@ -1,5 +1,8 @@
 # SINTA MCP Server 🎯
 
+> mcp-name: io.github.lightnet19/sinta-mcp-server
+
+
 MCP server untuk mengakses **Science and Technology Index (SINTA)** Indonesia.
 Cek skor dosen, profil peneliti, akreditasi jurnal, dan publikasi ilmiah — langsung dari AI assistant Anda!
 
